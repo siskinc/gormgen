@@ -2,7 +2,9 @@ package example
 
 import "github.com/jinzhu/gorm"
 
-//go:generate gormgen -structs User -output user_gen.go
+var client *gorm.DB
+
+//go:generate gormgen -structs User -output user_gen.go -client client
 type User struct {
 	gorm.Model
 	Name  string

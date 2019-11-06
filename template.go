@@ -19,20 +19,18 @@ package {{.PkgName}}
 //        ANY CHANGES DONE HERE WILL BE LOST             //
 ///////////////////////////////////////////////////////////
 
-{{if ne (.PkgName) "gormgen"}}
-import "github.com/MohamedBassem/gormgen"
-{{end}}
+import "github.com/siskinc/gormgen"
 import "github.com/jinzhu/gorm"
 import "fmt"
 
 {{range .Structs}}
 
-	func (t *{{.StructName}}) Save(db *gorm.DB) error {
-		return db.Save(t).Error
+	func (t *{{.StructName}}) Save() error {
+		return {{$.Client}}.Save(t).Error
 	}
 
-	func (t *{{.StructName}}) Delete(db *gorm.DB) error {
-		return db.Delete(t).Error
+	func (t *{{.StructName}}) Delete() error {
+		return {{$.Client}}.Delete(t).Error
 	}
 
 	type {{.QueryBuilderName}} struct {
@@ -45,8 +43,8 @@ import "fmt"
 		offset int
 	}
 
-	func (qb *{{.QueryBuilderName}}) buildQuery(db *gorm.DB) *gorm.DB {
-		ret := db
+	func (qb *{{.QueryBuilderName}}) buildQuery() *gorm.DB {
+		ret := {{$.Client}}
 		for _, where := range qb.where {
 			ret = ret.Where(where.prefix, where.value)
 		}
@@ -57,36 +55,36 @@ import "fmt"
 		return ret
 	}
 
-	func (qb *{{.QueryBuilderName}}) Count(db *gorm.DB) (int, error) {
+	func (qb *{{.QueryBuilderName}}) Count() (int, error) {
 		var c int
-		res := qb.buildQuery(db).Model(&{{.StructName}}{}).Count(&c)
+		res := qb.buildQuery().Model(&{{.StructName}}{}).Count(&c)
 		if res.RecordNotFound() {
 			c = 0
 		}
 		return c, res.Error
 	}
 
-	func (qb *{{.QueryBuilderName}}) First(db *gorm.DB) (*{{.StructName}}, error) {
+	func (qb *{{.QueryBuilderName}}) First() (*{{.StructName}}, error) {
 		ret := &{{.StructName}}{}
-		res := qb.buildQuery(db).First(ret)
+		res := qb.buildQuery().First(ret)
 		if res.RecordNotFound() {
 			ret = nil
 		}
 		return ret, res.Error
 	}
 
-	func (qb *{{.QueryBuilderName}}) QueryOne(db *gorm.DB) (*{{.StructName}}, error) {
+	func (qb *{{.QueryBuilderName}}) QueryOne() (*{{.StructName}}, error) {
 		qb.limit = 1
-		ret, err := qb.QueryAll(db)
+		ret, err := qb.QueryAll()
 		if len(ret) > 0 {
 			return &ret[0], err
 		}
 		return nil, err
 	}
 
-	func (qb *{{.QueryBuilderName}}) QueryAll(db *gorm.DB) ([]{{.StructName}}, error) {
+	func (qb *{{.QueryBuilderName}}) QueryAll() ([]{{.StructName}}, error) {
 		ret := []{{.StructName}}{}
-		err := qb.buildQuery(db).Find(&ret).Error
+		err := qb.buildQuery().Find(&ret).Error
 		return ret, err
 	}
 

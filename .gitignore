@@ -28,3 +28,4 @@ _testmain.go
 
 gormgen
 .DS_Store
+/go.sum

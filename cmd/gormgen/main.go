@@ -6,23 +6,25 @@ import (
 	"os"
 	"strings"
 
-	"github.com/MohamedBassem/gormgen"
+	"github.com/siskinc/gormgen"
 )
 
 type config struct {
 	output  string
 	structs []string
+	client  string
 }
 
 var cnf config
 
 func parseFlags() {
-	var output, structs string
+	var output, structs, client string
 	flag.StringVar(&structs, "structs", "", "[Required] The name of schema structs to generate structs for, comma seperated")
 	flag.StringVar(&output, "output", "", "[Required] The name of the output file")
+	flag.StringVar(&client, "client", "", "[Required] The name of *grom.DB object")
 	flag.Parse()
 
-	if output == "" || structs == "" {
+	if output == "" || structs == "" || client == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -30,6 +32,7 @@ func parseFlags() {
 	cnf = config{
 		output:  output,
 		structs: strings.Split(structs, ","),
+		client:  client,
 	}
 }
 
@@ -44,7 +47,7 @@ func main() {
 	parser.ParseDir(wd)
 
 	gen := gormgen.NewGenerator(cnf.output)
-	if err := gen.Init(parser, cnf.structs); err != nil {
+	if err := gen.Init(parser, cnf.structs, cnf.client); err != nil {
 		log.Fatalf("Error Initializing Generator: %v", err.Error())
 	}
 	if err := gen.Generate(); err != nil {

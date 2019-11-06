@@ -35,6 +35,7 @@ type structsConfig struct {
 	PkgName string
 	Helpers structHelpers
 	Structs []structConfig
+	Client  string
 }
 
 // The Generator is the one responsible for generating the code, adding the imports, formating, and writing it to the file.
@@ -54,7 +55,7 @@ func NewGenerator(outputFile string) *Generator {
 
 // Init function should be called before any other function is called. It takes a parser that has already parsed the directory
 // that contains the types we want to generate code for. It also takes the name of the structs that we want to generate code for.
-func (g *Generator) Init(parser *Parser, structs []string) error {
+func (g *Generator) Init(parser *Parser, structs []string, client string) error {
 	if err := g.validateStructs(parser, structs); err != nil {
 		return err
 	}
@@ -63,6 +64,7 @@ func (g *Generator) Init(parser *Parser, structs []string) error {
 		Helpers: structHelpers{
 			Titelize: strings.Title,
 		},
+		Client: client,
 	}
 	for _, st := range structs {
 		g.config.Structs = append(g.config.Structs, *g.buildConfig(parser, st))

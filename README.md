@@ -1,6 +1,6 @@
 # gormgen
 
-[![Build Status](https://travis-ci.org/MohamedBassem/gormgen.svg?branch=master)](https://travis-ci.org/MohamedBassem/gormgen)
+[![Build Status](https://travis-ci.org/siskinc/gormgen.svg?branch=master)](https://travis-ci.org/MohamedBassem/gormgen)
 
 gormgen is a code generation tool to generate a better API to query and update [gorm](https://github.com/jinzhu/gorm) structs without having to deal with `interface{}`s or with database column names.
 
@@ -79,7 +79,7 @@ For the actual generated code, check the examples folder.
 
 ## How to use it
 
-- `go get -u github.com/MohamedBassem/gormgen/...`
+- `go get -u github.com/siskinc/gormgen/...`
 - Add the `//go:generate` comment mentioned above anywhere in your code.
 - Add `go generate` to your build steps.
 - **The generated code will depend on gorm and gormgen, so make sure to vendor both of them.**
