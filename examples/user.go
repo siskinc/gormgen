@@ -4,7 +4,7 @@ import "github.com/jinzhu/gorm"
 
 var client *gorm.DB
 
-//go:generate gormgen -structs User -output user_gen.go -client client
+//go:generate gormgen -structs User -client client
 type User struct {
 	gorm.Model
 	Name  string

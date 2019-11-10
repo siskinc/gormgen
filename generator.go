@@ -60,7 +60,7 @@ func (g *Generator) Init(parser *Parser, structs []string, client string) error 
 		return err
 	}
 	g.config = structsConfig{
-		PkgName: parser.pkgName,
+		PkgName: parser.PkgName,
 		Helpers: structHelpers{
 			Titelize: strings.Title,
 		},

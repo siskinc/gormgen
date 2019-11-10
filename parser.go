@@ -8,12 +8,13 @@ import (
 	"go/token"
 	"go/types"
 	"log"
+	"strings"
 )
 
 // The Parser is used to parse a directory and expose information about the structs defined in the files of this directory.
 type Parser struct {
 	dir         string
-	pkgName     string
+	PkgName     string
 	types       map[*ast.Ident]*ast.StructType
 	files       []string
 	parsedFiles []*ast.File
@@ -34,8 +35,14 @@ func (p *Parser) getFiles() {
 		log.Fatalf("cannot process directory %s: %s", p.dir, err)
 	}
 	var files []string
-	p.pkgName = pkg.Name
-	files = append(files, pkg.GoFiles...)
+	p.PkgName = pkg.Name
+	for _, f := range pkg.GoFiles {
+		if strings.HasSuffix(f, "_gormgen.go") {
+			continue
+		}
+		files = append(files, f)
+	}
+	//files = append(files, pkg.GoFiles...)
 	files = append(files, pkg.CgoFiles...)
 	files = append(files, pkg.TestGoFiles...)
 	p.files = files
