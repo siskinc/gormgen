@@ -47,7 +47,10 @@ err := user.Save(db)
 If you have the following :
 
 ```go
-//go:generate gormgen -structs User -output user_gen.go
+import "github.com/jinzhu/gorm"
+
+var client *gorm.DB
+//go:generate gormgen -structs User -client client
 type User struct {
 	ID   uint   `gorm:"primary_key"`
 	Name string
@@ -61,10 +64,10 @@ Run `go generate` and gormgen will generate for you :
 func (t *User) Save(db *gorm.DB) error {/* … */}
 func (t *User) Delete(db *gorm.DB) error {/* … */}
 type UserQueryBuilder struct {/* … */}
-func (qb *UserQueryBuilder) Count(db *gorm.DB) (int, error) {/* … */}
-func (qb *UserQueryBuilder) First(db *gorm.DB) (*User, error) {/* … */} // Sorted by primary key
-func (qb *UserQueryBuilder) QueryOne(db *gorm.DB) (*User, error) {/* … */} // Sorted by the order specified
-func (qb *UserQueryBuilder) QueryAll(db *gorm.DB) ([]User, error) {/* … */}
+func (qb *UserQueryBuilder) Count() (int, error) {/* … */}
+func (qb *UserQueryBuilder) First() (*User, error) {/* … */} // Sorted by primary key
+func (qb *UserQueryBuilder) QueryOne() (*User, error) {/* … */} // Sorted by the order specified
+func (qb *UserQueryBuilder) QueryAll() ([]User, error) {/* … */}
 func (qb *UserQueryBuilder) Limit(limit int) *UserQueryBuilder {/* … */}
 func (qb *UserQueryBuilder) Offset(offset int) *UserQueryBuilder {/* … */}
 func (qb *UserQueryBuilder) WhereID(p gormgen.Predicate, value uint) *UserQueryBuilder {/* … */}
